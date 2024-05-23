@@ -484,7 +484,52 @@
         </div>
     </div>
 
+
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+
     <script>
+        // For setting up firebase
+
+        // Import the functions you need from the SDKs you need
+        // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        // import { dataBase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database";
+        // // TODO: Add SDKs for Firebase products that you want to use
+        // // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        let fetchedTrainingData = false;
+
+        try {
+            var firebaseConfig = {
+                apiKey: "AIzaSyCsLrs6g66VWHgytUlb7eT-NvkpPmls8DM",
+                authDomain: "cenace-9f773.firebaseapp.com",
+                databaseURL: "https://cenace-9f773-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "cenace-9f773",
+                storageBucket: "cenace-9f773.appspot.com",
+                messagingSenderId: "240005120782",
+                appId: "1:240005120782:web:353ecfd70531853c804d5f"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            var database = firebase.database();
+    
+            const data = database.ref('cenace/training-data');
+    
+            var trainingDataRef = database.ref('cenace/training_data');
+            trainingDataRef.once('value', function (snapshot) {
+                var trainingData = snapshot.val();
+    
+                // setting training data to local storage
+                localStorage.setItem('learning_data', trainingData);
+                fetchedTrainingData = true;
+            });
+        } catch (error) {
+            alert("Cannot get training data. Please check your internet connection.");
+        }
+
+
+
         const WIN_REWORD = 3;
         const DRAW_REWORD = 1;
         const PUNISHMENT = 1;
@@ -658,7 +703,7 @@
                 // Pushing into stack
                 let stackElement = boardString + "," + move;
                 stack.push(stackElement);
-                console.log(stackElement);
+                // console.log(stackElement);
 
                 renderBoard2(boardString, move);
                 board[move - 1] = mark;
@@ -722,11 +767,11 @@
         function updateLearningData() {
             stack.forEach(element => {
                 let values = element.split(',');
-                console.log("values 0 = " + values[0]);
-                console.log("hash value = " + hashMap[values[0]]);
+                // console.log("values 0 = " + values[0]);
+                // console.log("hash value = " + hashMap[values[0]]);
                 let hashValues = (hashMap[values[0]]).split(',');
                 let point = 0;
-                console.log(hashValues.toString());
+                // console.log(hashValues.toString());
                 if (checkWin() === 1 && player === 1) {
                     point = Number(hashValues[values[1] - 1]);
                     point += WIN_REWORD;
@@ -754,6 +799,16 @@
             });
             csv = csv.substr(0, csv.length - 1);
             localStorage.setItem("learning_data", csv);
+
+            // saving to firebase
+            // set(ref(db, 'cenace/' + training_data), csv);
+            if(fetchedTrainingData) {
+                try {
+                    database.ref('cenace/training_data').set(csv);
+                } catch (error) {
+                    alert("Cannot update training data. Please check your internet connection.");
+                }
+            }
         }
 
         function scoreUpdate() {
@@ -975,8 +1030,8 @@
                             bst.insert(key);
                             hashMap[key] = value;
 
-                            console.log("key = " + key);
-                            console.log("value = " + value);
+                            // console.log("key = " + key);
+                            // console.log("value = " + value);
                         });
                     }
                     computerMove();
