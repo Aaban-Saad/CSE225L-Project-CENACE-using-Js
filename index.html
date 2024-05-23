@@ -513,17 +513,7 @@
             // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             var database = firebase.database();
-    
-            const data = database.ref('cenace/training-data');
-    
-            var trainingDataRef = database.ref('cenace/training_data');
-            trainingDataRef.once('value', function (snapshot) {
-                var trainingData = snapshot.val();
-    
-                // setting training data to local storage
-                localStorage.setItem('learning_data', trainingData);
-                fetchedTrainingData = true;
-            });
+
         } catch (error) {
             alert("Cannot get training data. Please check your internet connection.");
         }
@@ -802,7 +792,7 @@
 
             // saving to firebase
             // set(ref(db, 'cenace/' + training_data), csv);
-            if(fetchedTrainingData) {
+            if (fetchedTrainingData) {
                 try {
                     database.ref('cenace/training_data').set(csv);
                 } catch (error) {
@@ -1020,6 +1010,17 @@
                     if (checkWin() != 0) {
                         resetGame();
                     }
+
+                    const data = database.ref('cenace/training-data');
+
+                    var trainingDataRef = database.ref('cenace/training_data');
+                    trainingDataRef.once('value', function (snapshot) {
+                        var trainingData = snapshot.val();
+
+                        // setting training data to local storage
+                        localStorage.setItem('learning_data', trainingData);
+                        fetchedTrainingData = true;
+                    });
 
                     let learningData = localStorage.getItem("learning_data");
                     if (learningData) {
