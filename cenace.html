@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -21,6 +21,7 @@
         body {
             background-color: lightblue;
             background-image: url('https://i.ibb.co/2FFq1NH/bg.png');
+            /* background-image: url('https://i.ibb.co/pjnTXLt/bg2.png'); */
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -31,6 +32,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-align: center;
         }
 
         .container {
@@ -50,46 +52,30 @@
             margin-bottom: 30px;
         }
 
-      /* Default styling for larger screens (row layout) */
-.game-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
+        /* Default styling for larger screens (row layout) */
+        .game-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
 
-/* Styling for small screens (column layout) */
-@media screen and (max-width: 360px) {
-    .game-container {
-        flex-direction: column;
-        padding: 5px;
-    }
-}
 
-/* Styling for board container */
-.board-container {
-    padding: 10px 0px 0px 0px;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    align-items: center;
-    width: 400px;
-    height: 570px;
-    background-color: rgba(54, 54, 54, 0.5);
-    border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-}
 
-/* Adjust board container for very small screens */
-@media screen and (max-width: 340px) {
-    .board-container {
-        width: 330px;
-        height: 570px;
-        display: flex ;
-        justify-content: center;
-        background: linear-gradient(to bottom, #60808a 11%, #176721 73%);
-    }
-}
+        /* Styling for board container */
+        .board-container {
+            padding: 10px 0px 0px 0px;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            align-items: center;
+            width: 400px;
+            height: 570px;
+            background-color: rgba(54, 54, 54, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
 
         .glow-border {
             font-size: 2em;
@@ -102,13 +88,13 @@
 
         @keyframes glow {
             0% {
-                border-color: rgba(127, 0, 57, 0.327);
+                /* border-color: rgba(127, 0, 57, 0.327); */
                 box-shadow: 0 0 200px #ff001e57;
 
             }
 
             100% {
-                border-color: rgba(40, 0, 132, 0.43);
+                /* border-color: rgba(40, 0, 132, 0.43); */
                 box-shadow: 0 0 300px #00c8ff7c;
 
             }
@@ -133,7 +119,7 @@
             font-family: "Sono", monospace;
             width: 100px;
             height: 100px;
-            background-color: rgba(54, 54, 54, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
             border-radius: 10px;
             display: flex;
             justify-content: center;
@@ -182,7 +168,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3rem;
+            font-size: 2rem;
             cursor: pointer;
             color: rgb(233, 233, 233);
             transition: all .5s ease;
@@ -303,6 +289,124 @@
             color: rgb(236, 236, 236);
             margin: 20px 0px 25px 0px;
         }
+
+        .training-lower-text {
+            font-size: x-large;
+            margin-top: 20px;
+        }
+
+        /* Styling for small screens (column layout) */
+        @media screen and (max-width: 850px) {
+            .game-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .cenace-title {
+                font-size: x-large;
+            }
+
+            .line {
+                background-color: #0000003d;
+                height: 2px;
+                width: 297px;
+                margin: 5px;
+            }
+
+            .line2 {
+                height: 70px;
+                width: 10px;
+            }
+
+            .board-container {
+                width: 330px;
+                height: 490px;
+                padding: 5px 0px 0px 0px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .left-score,
+            .right-score {
+                color: rgba(255, 255, 255, 0.726);
+                display: flex;
+                padding: 10px;
+                align-items: center;
+                height: 47px;
+                width: 127px;
+                background-color: rgba(204, 204, 204, 0.37);
+                border-radius: 10px;
+                font-size: medium;
+            }
+
+            .board {
+                display: grid;
+                grid-template-columns: repeat(3, 85px);
+                grid-template-rows: repeat(3, 85px);
+                gap: 2px;
+            }
+
+            .board2 {
+                display: grid;
+                grid-template-columns: repeat(3, 50px);
+                grid-template-rows: repeat(3, 50px);
+                gap: 2px;
+            }
+
+            .cell {
+
+                width: 85px;
+                height: 85px;
+
+                font-size: 4rem;
+
+            }
+
+            .cell2 {
+
+                width: 50px;
+                height: 50px;
+
+                border-radius: 10px;
+
+                font-size: 2rem;
+
+            }
+
+            .wining-cell {
+                width: 85px;
+                height: 85px;
+                border-radius: 10px;
+                font-size: 3rem;
+            }
+
+            .wining-cell2 {
+                width: 50px;
+                height: 50px;
+            }
+
+            .top-message {
+                margin: 0px 0px 0px 0px;
+                font-size: small;
+            }
+
+            .sci-fi-btn {
+                padding: 12px 24px;
+                margin-top: 8px;
+                font-size: 14px;
+
+            }
+
+            .training-heading {
+                font-size: large;
+                margin-top: 0;
+            }
+
+            .training-lower-text {
+                font-size: large;
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -362,16 +466,19 @@
                     <div id="cell82" class="cell2"></div>
                     <div id="cell92" class="cell2"></div>
                 </div>
-                <p id="cenace-chose" style="font-size: x-large; margin: 20px 0px 20px 0px;">CENACE chose: </p>
-                <div style="font-size: x-large; display: flex; flex-direction: column; align-items: center;">
-                    <div class="line"></div>
-                    <br>
-                    Score Rules:
-                    <ul>
-                        <li>Win: +3</li>
-                        <li>Draw: +1</li>
-                        <li>Lose: -1</li>
-                    </ul>
+
+                <div class="training-lower-text">
+                    <p id="cenace-chose" style="text-align: center;">CENACE chose: </p>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="line"></div>
+                        <br>
+                        Score Rules:
+                        <ul>
+                            <li>Win: +3</li>
+                            <li>Draw: +1</li>
+                            <li>Lose: -1</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -816,7 +923,7 @@
             while (stack.length > 0) {
                 stack.pop();
             }
-            
+
             renderBoard();
 
             (document.getElementById("cell1")).classList.remove("wining-cell");
@@ -828,7 +935,7 @@
             (document.getElementById("cell7")).classList.remove("wining-cell");
             (document.getElementById("cell8")).classList.remove("wining-cell");
             (document.getElementById("cell9")).classList.remove("wining-cell");
-            
+
         }
 
         function start() {
