@@ -984,6 +984,7 @@
         }
 
         function start() {
+            if(!fetchedTrainingData) return;
             if (!autoTrain) {
                 if (!gameIsRunning || checkWin() != 0) {
 
@@ -1012,7 +1013,6 @@
                     }
 
                     const data = database.ref('cenace/training-data');
-
                     var trainingDataRef = database.ref('cenace/training_data');
                     trainingDataRef.once('value', function (snapshot) {
                         var trainingData = snapshot.val();
@@ -1060,7 +1060,19 @@
         }
 
 
+        // fetching training data
+        const data = database.ref('cenace/training-data');
+        var trainingDataRef = database.ref('cenace/training_data');
+        trainingDataRef.once('value', function (snapshot) {
+            var trainingData = snapshot.val();
+
+            // setting training data to local storage
+            localStorage.setItem('learning_data', trainingData);
+            fetchedTrainingData = true;
+        });
+    
         renderBoard();
+    
     </script>
 </body>
 
