@@ -16,6 +16,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            color: white;
         }
 
         body {
@@ -45,15 +46,27 @@
         .title-container {
             background-color: rgba(90, 90, 90, 0.39);
             padding: 10px;
+            /* margin-bottom: 30px; */
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            margin-bottom: 30px;
         }
+
+        .title {
+            flex: 40
+        }
+
+        .profile-pic-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
 
         /* Default styling for larger screens (row layout) */
         .game-container {
+            margin-top: 30px;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -70,8 +83,9 @@
             flex-direction: column;
             gap: .5rem;
             align-items: center;
+            justify-content: center;
             width: 400px;
-            height: 570px;
+            height: 580px;
             background-color: rgba(54, 54, 54, 0.6);
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
@@ -295,6 +309,52 @@
             margin-top: 20px;
         }
 
+        .username,
+        .email {
+            color: rgb(0, 0, 0);
+            font-size: large;
+            padding: 10px;
+            border-radius: 20px;
+            background-color: #ffffffd8;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: large;
+        }
+
+        .profile-page {
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+        }
+
+        .leader-board {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-nav-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            margin-top: 30px;
+        }
+
         /* Styling for small screens (column layout) */
         @media screen and (max-width: 850px) {
             .game-container {
@@ -303,7 +363,7 @@
             }
 
             .cenace-title {
-                font-size: x-large;
+                font-size: large;
             }
 
             .line {
@@ -407,77 +467,140 @@
                 margin-top: 20px;
             }
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <div class="title-container">
-        <h1 class="cenace-title">Computer Educable Noughts And Crosses Engine</h1>
+        <div class="profile-pic-container" style="cursor: pointer;" onclick="profilePageOpen()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                style="fill: rgb(255, 255, 255)">
+                <path
+                    d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z">
+                </path>
+            </svg>
+        </div>
+        <div class="title">
+            <h1 class="cenace-title">Computer Educable Noughts And Crosses Engine</h1>
+        </div>
     </div>
 
-    <div class="game-container">
-        <div class="board-container">
-            <p id="match" class="top-message">Match 1</p>
-            <p class="top-message" id="top-message">CENACE's turn</p>
-            <div class="score-container">
-                <div class="left-score">
-                    <h1 style="margin-right: 5px; font-family: monospace;">O:</h1>
-                    <div id="o-score">0</div>
-                </div>
-                <div class="right-score">
-                    <h1 style="margin-right: 5px; font-family: monospace;">X:</h1>
-                    <div id="x-score">0</div>
-                </div>
-            </div>
-            <div class="line"></div>
-            <div class="board">
-                <div id="cell1" class="cell" onclick="inputMove(1)"></div>
-                <div id="cell2" class="cell" onclick="inputMove(2)"></div>
-                <div id="cell3" class="cell" onclick="inputMove(3)"></div>
-                <div id="cell4" class="cell" onclick="inputMove(4)"></div>
-                <div id="cell5" class="cell" onclick="inputMove(5)"></div>
-                <div id="cell6" class="cell" onclick="inputMove(6)"></div>
-                <div id="cell7" class="cell" onclick="inputMove(7)"></div>
-                <div id="cell8" class="cell" onclick="inputMove(8)"></div>
-                <div id="cell9" class="cell" onclick="inputMove(9)"></div>
-            </div>
-            <div class="container">
-                <div class="button-container">
-                    <!-- <label class="checkbox">
-                        <input type="checkbox" id="checkbox" name="Train" onchange="processTrainingCheckbox()">
-                        Train
-                    </label> -->
-                    <button class="sci-fi-btn" id="sci-fi-btn" onclick="start()">Start</button>
-                </div>
+    <div id="login-page" class="container login-container">
+        <div id="signup-container">
+
+            <div class="board-container">
+                <form id="signUpForm" onsubmit="processSignUpForm(event)">
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="s_username" class="username" name="s_username" required><br><br>
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="s_email" class="email" name="s_email" required><br><br>
+                    <button class="sci-fi-btn" type="submit">Sign Up</button>
+                </form>
+                <br>
+                <p>Already Signed Up? <span style="text-decoration: underline; cursor: pointer;"
+                        onclick="logIn()">LogIn</span></p>
             </div>
         </div>
-        <div class="line2"></div>
-        <div class="board-container glow-border">
-            <div class="container">
-                <h1 class="training-heading">Training Data</h1>
-                <div class="board2">
-                    <div id="cell12" class="cell2"></div>
-                    <div id="cell22" class="cell2"></div>
-                    <div id="cell32" class="cell2"></div>
-                    <div id="cell42" class="cell2"></div>
-                    <div id="cell52" class="cell2"></div>
-                    <div id="cell62" class="cell2"></div>
-                    <div id="cell72" class="cell2"></div>
-                    <div id="cell82" class="cell2"></div>
-                    <div id="cell92" class="cell2"></div>
-                </div>
 
-                <div class="training-lower-text">
-                    <p id="cenace-chose" style="text-align: center;">CENACE chose: </p>
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <div class="line"></div>
-                        <br>
-                        Score Rules:
-                        <ul>
-                            <li>Win: +3</li>
-                            <li>Draw: +1</li>
-                            <li>Lose: -1</li>
-                        </ul>
+        <div id="login-container" class="hidden">
+            <div class="board-container">
+                <form id="signUpForm" onsubmit="processLogInForm(event)">
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="l_email" class="email" name="l_email" required><br><br>
+                    <button class="sci-fi-btn" type="submit">Log In</button>
+                </form>
+                <br>
+                <p>Didn't Sign Up? <span style="text-decoration: underline; cursor: pointer;"
+                        onclick="signUp()">SignUp</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile-page" class="hidden profile-page">
+        <div style="min-height: 100vh; width:90vw; background-color: rgba(0, 0, 0, 0.488);">
+            <div class="profile-nav">
+                <div class="profile-nav-left"> <button
+                        style="padding: 5px; color: rgb(255, 255, 255); background-color: #1bbb53c2; cursor: pointer;"
+                        onclick="mainPageOpen()">Go Back</button></div>
+                <div class="profile-nav-right"><span id="profile-email"></span> <button style="color: red;"
+                        onclick="logOut()">Log Out</button></div>
+            </div>
+            <div style="display: flex; flex-direction: column;" class="leader-board">
+                <h1>Leader Board</h1>
+                <div id="allPlayers" class="allPlayers"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-page" class="hidden">
+        <div class="game-container">
+            <div class="board-container">
+                <p id="match" class="top-message">Match 1</p>
+                <p class="top-message" id="top-message">CENACE's turn</p>
+                <div class="score-container">
+                    <div class="left-score">
+                        <h1 style="margin-right: 5px; font-family: monospace;">O:</h1>
+                        <div id="o-score">0</div>
+                    </div>
+                    <div class="right-score">
+                        <h1 style="margin-right: 5px; font-family: monospace;">X:</h1>
+                        <div id="x-score">0</div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="board">
+                    <div id="cell1" class="cell" onclick="inputMove(1)"></div>
+                    <div id="cell2" class="cell" onclick="inputMove(2)"></div>
+                    <div id="cell3" class="cell" onclick="inputMove(3)"></div>
+                    <div id="cell4" class="cell" onclick="inputMove(4)"></div>
+                    <div id="cell5" class="cell" onclick="inputMove(5)"></div>
+                    <div id="cell6" class="cell" onclick="inputMove(6)"></div>
+                    <div id="cell7" class="cell" onclick="inputMove(7)"></div>
+                    <div id="cell8" class="cell" onclick="inputMove(8)"></div>
+                    <div id="cell9" class="cell" onclick="inputMove(9)"></div>
+                </div>
+                <div class="container">
+                    <div class="button-container">
+                        <!-- <label class="checkbox">
+                            <input type="checkbox" id="checkbox" name="Train" onchange="processTrainingCheckbox()">
+                            Train
+                        </label> -->
+                        <button class="sci-fi-btn" id="sci-fi-btn" onclick="start()">Start</button>
+                    </div>
+                </div>
+            </div>
+            <div class="line2"></div>
+            <div class="board-container glow-border">
+                <div class="container">
+                    <h1 class="training-heading">Training Data</h1>
+                    <div class="board2">
+                        <div id="cell12" class="cell2"></div>
+                        <div id="cell22" class="cell2"></div>
+                        <div id="cell32" class="cell2"></div>
+                        <div id="cell42" class="cell2"></div>
+                        <div id="cell52" class="cell2"></div>
+                        <div id="cell62" class="cell2"></div>
+                        <div id="cell72" class="cell2"></div>
+                        <div id="cell82" class="cell2"></div>
+                        <div id="cell92" class="cell2"></div>
+                    </div>
+
+                    <div class="training-lower-text">
+                        <p id="cenace-chose" style="text-align: center;">CENACE chose: </p>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div class="line"></div>
+                            <br>
+                            Score Rules:
+                            <ul>
+                                <li>Win: +3</li>
+                                <li>Draw: +1</li>
+                                <li>Lose: -1</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -602,7 +725,78 @@
             return result;
         }
 
+
+
+        class PriorityQueue {
+            constructor() {
+                this.items = [];
+            }
+
+            enqueue(element, priority) {
+                const queueElement = { element, priority };
+                let added = false;
+                for (let i = 0; i < this.items.length; i++) {
+                    if (queueElement.priority < this.items[i].priority) {
+                        this.items.splice(i, 0, queueElement);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) {
+                    this.items.push(queueElement);
+                }
+            }
+
+            dequeue() {
+                if (this.isEmpty()) {
+                    return "Underflow";
+                }
+                return this.items.shift().element;
+            }
+
+            front() {
+                if (this.isEmpty()) {
+                    return "No elements in Queue";
+                }
+                return this.items[0];
+            }
+
+            isEmpty() {
+                return this.items.length === 0;
+            }
+
+            printQueue() {
+                let str = "";
+                for (let i = 0; i < this.items.length; i++) {
+                    str += this.items[i].element + " ";
+                }
+                return str;
+            }
+        }
+
+
+        // Function to push or update the rating of a name in the priority queue
+        function updateNameRatings(name, rating) {
+            // Check if the name already exists in the map
+            if (nameRatings[name] != undefined) {
+                // Update the rating if the new rating is higher
+                if (nameRatings[name] < rating) {
+                    nameRatings[name] = rating;
+                    // pq.enqueue(name, rating);
+                }
+            } else {
+                // Add the new name-rating pair
+                nameRatings[name] = rating;
+                userNames.push(name);
+            }
+        }
+
+
+
+
+
         let board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+        let initialPlayer = 2;
         let player = 1;
         let mark = 'O';
         let gameIsRunning = false;
@@ -613,6 +807,127 @@
         let X_score = 0;
         let match = 1;
         let autoTrain = false;
+        let rating = 0
+        let nameRatings = {};
+        let userNames = [];
+        let pq = new PriorityQueue();
+
+        function logIn() {
+            document.getElementById('signup-container').classList.add('hidden');
+            document.getElementById('login-container').classList.remove('hidden');
+
+        }
+
+        function signUp() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.remove('hidden');
+        }
+
+        function processSignUpForm(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get form values
+            var username = document.getElementById("s_username").value;
+            var email = document.getElementById("s_email").value;
+
+            // Firebase cannot save path with '.'s thats why splitting it and taking the 1st part
+            let id = email.split('.');
+            // Save to database
+
+            // Checking if user already exists
+            var emailRef = database.ref('users/' + id[0]);
+            emailRef.once('value', function (snapshot) {
+                var emailInDatabase = snapshot.val();
+                if (emailInDatabase) {
+                    alert("User already exists");
+                } else {
+                    database.ref('users/' + id[0]).set({ 'username': username, 'email': email });
+
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('email', email);
+
+                    // Switch to main page
+                    document.getElementById('login-page').classList.add('hidden');
+                    document.getElementById('main-page').classList.remove('hidden');
+                }
+            });
+
+        }
+
+        function processLogInForm(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get form values
+            var email = document.getElementById("l_email").value;
+
+            let id = email.split('.');
+            // Save to database
+
+            // Checking if user already exists
+            var emailRef = database.ref('users/' + id[0]);
+            emailRef.once('value', function (snapshot) {
+                var emailInDatabase = snapshot.val();
+                if (emailInDatabase) {
+                    if (emailInDatabase.email === email) {
+                        localStorage.setItem('username', emailInDatabase.username);
+                        localStorage.setItem('email', emailInDatabase.email);
+
+                        // Switch to main page
+                        document.getElementById('login-page').classList.add('hidden');
+                        document.getElementById('main-page').classList.remove('hidden');
+                    }
+                } else {
+                    alert("User does not exist");
+                }
+            });
+            localStorage.setItem('email', email);
+        }
+
+
+        function profilePageOpen() {
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('profile-page').classList.remove('hidden');
+
+            document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
+            // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
+            document.getElementById('allPlayers').innerHTML = "Work in progress";
+
+        }
+
+        function mainPageOpen() {
+            document.getElementById('profile-page').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+        }
+
+        function logOut() {
+            localStorage.removeItem('username');
+            localStorage.removeItem('email');
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('profile-page').classList.add('hidden');
+            document.getElementById('login-page').classList.remove('hidden');
+        }
+
+        function updateRatings() {
+            // Creating pq
+            userNames.forEach(name => {
+                pq.enqueue(name, nameRatings[name]);
+            });
+
+            let ratings = "";
+            while (!pq.isEmpty()) {
+                let name = pq.dequeue();
+                console.log("name in pq = " + name + pq.isEmpty());
+                let ratingOfThePlayer = nameRatings[name];
+
+                ratings += name + ',' + ratingOfThePlayer + ';';
+            }
+            // Getting rid of the last ';'
+            ratings = ratings.substr(0, ratings.length - 1);
+            localStorage.setItem('ratings', ratings);
+
+            // Updating ratings in database
+            database.ref('leaderBoard/ratings').set(ratings);
+        }
 
         function inputMove(move) {
             if (checkWin() != 0) {
@@ -621,6 +936,8 @@
                 // Human player's move
                 if (player === 2 && !autoTrain) {
                     if (board[move - 1] === ' ') {
+                        rateThisMove(move);
+                        console.log('rating = ' + rating);
                         board[move - 1] = mark;
                         moveGiven = true;
                         renderBoard();
@@ -705,16 +1022,19 @@
                     scoreUpdate();
                     updateLearningData();
                     changeWiningCellColor();
+
                 } else if (checkWin() === -1) {
                     document.getElementById("top-message").innerHTML = "It's a draw!";
                     scoreUpdate();
                     updateLearningData();
+                    rating /= 2;
                 } else {
                     // Switch player
                     player = 2;
                     mark = 'X';
                     document.getElementById("top-message").innerHTML = "Your turn";
                 }
+
                 gameIsRunning = true;
                 if (autoTrain) autoTrainMove();
             }
@@ -799,18 +1119,34 @@
                     alert("Cannot update training data. Please check your internet connection.");
                 }
             }
+
+
         }
 
         function scoreUpdate() {
-            if (checkWin() === 1 && player === 1) {
+            console.log(nameRatings);
+            if (checkWin() === 1 && mark === 'O') {
                 O_score += 3;
                 X_score -= 1;
-            } else if (checkWin() === 1 && player === 2) {
+
+                // player lost
+                rating /= 10;
+                updateNameRatings(localStorage.getItem('username'), rating);
+                updateRatings();
+            } else if (checkWin() === 1 && mark === 'X') {
                 O_score -= 1;
                 X_score += 3;
+
+                //player won
+                updateNameRatings(localStorage.getItem('username'), rating);
+                updateRatings();
             } else {
                 O_score += 1;
                 X_score += 1;
+
+                rating /= 2;
+                updateNameRatings(localStorage.getItem('username'), rating);
+                updateRatings();
             }
             document.getElementById("o-score").innerHTML = O_score;
             document.getElementById("x-score").innerHTML = X_score;
@@ -957,6 +1293,25 @@
             }
         }
 
+        function rateThisMove(move) {
+            let boardString = "";
+            board.forEach(element => {
+                if (element === ' ') {
+                    boardString += '-';
+                } else if (element === 'O') {
+                    boardString += 'X';
+                } else if (element === 'X') {
+                    boardString += 'O';
+                }
+            });
+
+            if (bst.search(boardString)) {
+                let hashValues = hashMap[boardString].split(',');
+                rating += Number(hashValues[move - 1]);
+            }
+
+        }
+
         function resetGame() {
             board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
             player = 1;
@@ -968,6 +1323,7 @@
             while (stack.length > 0) {
                 stack.pop();
             }
+            rating = 0;
 
             renderBoard();
 
@@ -984,7 +1340,7 @@
         }
 
         function start() {
-            if(!fetchedTrainingData) return;
+            if (!fetchedTrainingData) return;
             if (!autoTrain) {
                 if (!gameIsRunning || checkWin() != 0) {
 
@@ -1012,7 +1368,6 @@
                         resetGame();
                     }
 
-                    const data = database.ref('cenace/training-data');
                     var trainingDataRef = database.ref('cenace/training_data');
                     trainingDataRef.once('value', function (snapshot) {
                         var trainingData = snapshot.val();
@@ -1028,6 +1383,7 @@
                         lines.forEach(element => {
                             let key = element.substr(0, 9);
                             let value = element.substr(10, element.length - 10);
+                            
                             bst.insert(key);
                             hashMap[key] = value;
 
@@ -1035,7 +1391,17 @@
                             // console.log("value = " + value);
                         });
                     }
-                    computerMove();
+
+
+                    player = initialPlayer === 2 ? 1 : 2;
+                    initialPlayer = player;
+                    mark = player === 1 ? 'O' : 'X';
+                    if (player === 1) {
+                        document.getElementById("top-message").innerHTML = "CENACE's turn";
+                        computerMove();
+                    } else {
+                        document.getElementById("top-message").innerHTML = "Your turn";
+                    }
                     // css glow animation
                     let button = document.getElementById('sci-fi-btn')
                     button.classList.add('sci-fi-btn-glow');
@@ -1060,8 +1426,13 @@
         }
 
 
+        // // Skip log in if already done
+        if (localStorage.getItem('username') && localStorage.getItem('email')) {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+        }
+
         // fetching training data
-        const data = database.ref('cenace/training-data');
         var trainingDataRef = database.ref('cenace/training_data');
         trainingDataRef.once('value', function (snapshot) {
             var trainingData = snapshot.val();
@@ -1070,9 +1441,38 @@
             localStorage.setItem('learning_data', trainingData);
             fetchedTrainingData = true;
         });
-    
+
+        // fetching ratings
+        var ratingsRef = database.ref('leaderBoard/ratings');
+        ratingsRef.once('value', function (snapshot) {
+            var ratings = snapshot.val();
+
+            if(ratings) {
+                // setting ratings to local storage
+                localStorage.setItem('ratings', ratings);
+                
+                let splitted = ratings.split(';');
+                splitted.forEach(element => {
+                    let nameRating = element.split(',');
+                    nameRatings[nameRating[0]] = nameRating[1];
+                    userNames.push(nameRating[0]);
+                    // pq.enqueue(nameRating[0], nameRating[1])
+                });
+                console.log(nameRatings);
+                console.log(pq.isEmpty())
+
+                // for debug
+                while(!pq.isEmpty) {
+                    let n = pq.dequeue();
+                    console.log("printing pq: ");
+                    console.lgo(n);
+                }
+            }
+
+        });
+
         renderBoard();
-    
+
     </script>
 </body>
 
