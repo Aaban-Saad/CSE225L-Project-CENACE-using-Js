@@ -649,6 +649,82 @@
         const MAX_POINT = 300;
         const MIN_POINT = 1;
 
+        // class TreeNode {
+        //     constructor(value) {
+        //         this.value = value;
+        //         this.left = null;
+        //         this.right = null;
+        //     }
+        // }
+
+        // class BST {
+        //     constructor() {
+        //         this.root = null;
+        //     }
+
+        //     insert(value) {
+        //         const newNode = new TreeNode(value);
+        //         if (!this.root) {
+        //             this.root = newNode;
+        //         } else {
+        //             this.insertNode(this.root, newNode);
+        //         }
+        //     }
+
+        //     insertNode(node, newNode) {
+        //         if (newNode.value < node.value) {
+        //             if (!node.left) {
+        //                 node.left = newNode;
+        //             } else {
+        //                 this.insertNode(node.left, newNode);
+        //             }
+        //         } else {
+        //             if (!node.right) {
+        //                 node.right = newNode;
+        //             } else {
+        //                 this.insertNode(node.right, newNode);
+        //             }
+        //         }
+        //     }
+
+        //     search(value) {
+        //         return this.searchNode(this.root, value);
+        //     }
+
+        //     searchNode(node, value) {
+        //         if (!node) {
+        //             return false;
+        //         }
+
+        //         if (value === node.value) {
+        //             return true;
+        //         }
+
+        //         if (value < node.value) {
+        //             return this.searchNode(node.left, value);
+        //         } else {
+        //             return this.searchNode(node.right, value);
+        //         }
+        //     }
+
+        //     clear() {
+        //         this.root = null;
+        //     }
+        // }
+
+        // function inOrderTraversal(node) {
+        //     const result = [];
+        //     function traverse(node) {
+        //         if (node !== null) {
+        //             traverse(node.left);
+        //             result.push(node.value);
+        //             traverse(node.right);
+        //         }
+        //     }
+        //     traverse(node);
+        //     return result;
+        // }
+
         class TreeNode {
             constructor(value) {
                 this.value = value;
@@ -659,71 +735,26 @@
 
         class BST {
             constructor() {
-                this.root = null;
+                this.values = new Set();
             }
 
             insert(value) {
-                const newNode = new TreeNode(value);
-                if (!this.root) {
-                    this.root = newNode;
-                } else {
-                    this.insertNode(this.root, newNode);
-                }
-            }
-
-            insertNode(node, newNode) {
-                if (newNode.value < node.value) {
-                    if (!node.left) {
-                        node.left = newNode;
-                    } else {
-                        this.insertNode(node.left, newNode);
-                    }
-                } else {
-                    if (!node.right) {
-                        node.right = newNode;
-                    } else {
-                        this.insertNode(node.right, newNode);
-                    }
-                }
+                this.values.add(value);
             }
 
             search(value) {
-                return this.searchNode(this.root, value);
-            }
-
-            searchNode(node, value) {
-                if (!node) {
-                    return false;
-                }
-
-                if (value === node.value) {
-                    return true;
-                }
-
-                if (value < node.value) {
-                    return this.searchNode(node.left, value);
-                } else {
-                    return this.searchNode(node.right, value);
-                }
+                return this.values.has(value);
             }
 
             clear() {
-                this.root = null;
+                this.values.clear();
+            }
+
+            inOrderTraversal() {
+                return Array.from(this.values).sort((a, b) => a - b);
             }
         }
 
-        function inOrderTraversal(node) {
-            const result = [];
-            function traverse(node) {
-                if (node !== null) {
-                    traverse(node.left);
-                    result.push(node.value);
-                    traverse(node.right);
-                }
-            }
-            traverse(node);
-            return result;
-        }
 
 
 
@@ -780,10 +811,10 @@
             // Check if the name already exists in the map
             if (nameRatings[name] != undefined) {
                 // Update the rating if the new rating is higher
-                if (nameRatings[name] < rating) {
+                // if (nameRatings[name] < rating) {
                     nameRatings[name] = rating;
                     // pq.enqueue(name, rating);
-                }
+                // }
             } else {
                 // Add the new name-rating pair
                 nameRatings[name] = rating;
@@ -885,13 +916,45 @@
 
 
         function profilePageOpen() {
-            document.getElementById('main-page').classList.add('hidden');
-            document.getElementById('profile-page').classList.remove('hidden');
+            if (localStorage.getItem('username') && localStorage.getItem('email')) {
+                document.getElementById('main-page').classList.add('hidden');
+                document.getElementById('profile-page').classList.remove('hidden');
 
-            document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
-            // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
-            document.getElementById('allPlayers').innerHTML = "Work in progress";
+                document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
+                // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
 
+                // fetching ratings
+                userNames = [];
+                var ratingsRef = database.ref('leaderBoard/ratings');
+                ratingsRef.once('value', function (snapshot) {
+                    var ratings = snapshot.val();
+
+                    if (ratings) {
+                        // setting ratings to local storage
+                        localStorage.setItem('ratings', ratings);
+
+                        let splitted = ratings.split(';');
+                        splitted.forEach(element => {
+                            let nameRating = element.split(',');
+                            nameRatings[nameRating[0]] = nameRating[1];
+                            userNames.push(nameRating[0]);
+                        });
+
+                        let leaderBoardHtml = "<p><br><br>";
+                        for(let i = userNames.length - 1, j = 1; i >= 0; i--, j++) {
+                            leaderBoardHtml += (j) + ". " + userNames[i] + " (Rating: " + nameRatings[userNames[i]] + ")<br><br>";
+                        }
+                        
+                        leaderBoardHtml += "</p>";
+                        document.getElementById('allPlayers').innerHTML = leaderBoardHtml;
+                        console.log("leader = " + leaderBoardHtml);
+                    }
+                });
+
+
+
+
+            }
         }
 
         function mainPageOpen() {
@@ -1102,7 +1165,8 @@
                 hashMap[values[0]] = hashValues.toString();
                 // console.log(toString(hashValues));
             });
-            let inOrderArray = inOrderTraversal(bst.root);
+            // let inOrderArray = inOrderTraversal(bst.root);
+            let inOrderArray = bst.inOrderTraversal();
             let csv = "";
             inOrderArray.forEach(element => {
                 csv += element + "," + hashMap[element] + ";";
@@ -1383,7 +1447,7 @@
                         lines.forEach(element => {
                             let key = element.substr(0, 9);
                             let value = element.substr(10, element.length - 10);
-                            
+
                             bst.insert(key);
                             hashMap[key] = value;
 
@@ -1391,6 +1455,27 @@
                             // console.log("value = " + value);
                         });
                     }
+
+
+                    // fetching ratings
+                    userNames = [];
+                    var ratingsRef = database.ref('leaderBoard/ratings');
+                    ratingsRef.once('value', function (snapshot) {
+                        var ratings = snapshot.val();
+
+                        if (ratings) {
+                            // setting ratings to local storage
+                            localStorage.setItem('ratings', ratings);
+
+                            let splitted = ratings.split(';');
+                            splitted.forEach(element => {
+                                let nameRating = element.split(',');
+                                nameRatings[nameRating[0]] = nameRating[1];
+                                userNames.push(nameRating[0]);
+                                // pq.enqueue(nameRating[0], nameRating[1])
+                            });
+                        }
+                    });
 
 
                     player = initialPlayer === 2 ? 1 : 2;
@@ -1447,10 +1532,10 @@
         ratingsRef.once('value', function (snapshot) {
             var ratings = snapshot.val();
 
-            if(ratings) {
+            if (ratings) {
                 // setting ratings to local storage
                 localStorage.setItem('ratings', ratings);
-                
+
                 let splitted = ratings.split(';');
                 splitted.forEach(element => {
                     let nameRating = element.split(',');
@@ -1458,17 +1543,7 @@
                     userNames.push(nameRating[0]);
                     // pq.enqueue(nameRating[0], nameRating[1])
                 });
-                console.log(nameRatings);
-                console.log(pq.isEmpty())
-
-                // for debug
-                while(!pq.isEmpty) {
-                    let n = pq.dequeue();
-                    console.log("printing pq: ");
-                    console.lgo(n);
-                }
             }
-
         });
 
         renderBoard();
