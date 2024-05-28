@@ -768,7 +768,7 @@
                 const queueElement = { element, priority };
                 let added = false;
                 for (let i = 0; i < this.items.length; i++) {
-                    if (queueElement.priority > this.items[i].priority) {
+                    if (Number(queueElement.priority) > Number(this.items[i].priority)) {
                         this.items.splice(i, 0, queueElement);
                         added = true;
                         break;
@@ -790,7 +790,7 @@
                 if (this.isEmpty()) {
                     return null;
                 }
-                return this.items[0].element; 
+                return this.items[0].element;
             }
 
             isEmpty() {
@@ -807,81 +807,6 @@
         }
 
 
-        // class PriorityQueue {
-        //     constructor() {
-        //         this.heap = [];
-        //     }
-
-        //     enqueue(element, priority) {
-        //         const node = { element, priority };
-        //         this.heap.push(node);
-        //         this.bubbleUp(this.heap.length - 1);
-        //     }
-
-        //     bubbleUp(index) {
-        //         while (index > 0) {
-        //             const parentIndex = Math.floor((index - 1) / 2);
-        //             if (this.heap[parentIndex].priority <= this.heap[index].priority) {
-        //                 break;
-        //             }
-        //             this.swap(parentIndex, index);
-        //             index = parentIndex;
-        //         }
-        //     }
-
-        //     dequeue() {
-        //         if (this.isEmpty()) {
-        //             return null;
-        //         }
-        //         if (this.heap.length === 1) {
-        //             return this.heap.pop();
-        //         }
-        //         const root = this.heap[0];
-        //         this.heap[0] = this.heap.pop();
-        //         this.bubbleDown(0);
-        //         return root;
-        //     }
-
-        //     bubbleDown(index) {
-        //         while (index < this.heap.length) {
-        //             const leftChildIdx = 2 * index + 1;
-        //             const rightChildIdx = 2 * index + 2;
-        //             let smallestIdx = index;
-        //             if (leftChildIdx < this.heap.length && this.heap[leftChildIdx].priority < this.heap[smallestIdx].priority) {
-        //                 smallestIdx = leftChildIdx;
-        //             }
-        //             if (rightChildIdx < this.heap.length && this.heap[rightChildIdx].priority < this.heap[smallestIdx].priority) {
-        //                 smallestIdx = rightChildIdx;
-        //             }
-        //             if (smallestIdx === index) {
-        //                 break;
-        //             }
-        //             this.swap(index, smallestIdx);
-        //             index = smallestIdx;
-        //         }
-        //     }
-
-        //     swap(i, j) {
-        //         const temp = this.heap[i];
-        //         this.heap[i] = this.heap[j];
-        //         this.heap[j] = temp;
-        //     }
-
-        //     isEmpty() {
-        //         return this.heap.length === 0;
-        //     }
-
-        //     peek() {
-        //         if (this.isEmpty()) {
-        //             return null;
-        //         }
-        //         return this.heap[0];
-        //     }
-
-        //     size() {
-        //         return this.heap.length;
-        //     }
-        // }
 
         // Function to push or update the rating of a name in the priority queue
         function updateNameRatings(name, rating) {
@@ -1024,7 +949,6 @@
 
                         leaderBoardHtml += "</p>";
                         document.getElementById('allPlayers').innerHTML = leaderBoardHtml;
-                        console.log("leader = " + leaderBoardHtml);
                     }
                 });
 
@@ -1056,7 +980,7 @@
             let ratings = "";
             while (!pq.isEmpty()) {
                 let name = pq.dequeue();
-                console.log("name in pq = " + name + pq.isEmpty());
+                // console.log("name in pq = " + name + pq.isEmpty());
                 let ratingOfThePlayer = nameRatings[name];
 
                 ratings += name + ',' + ratingOfThePlayer + ';';
@@ -1067,6 +991,8 @@
 
             // Updating ratings in database
             database.ref('leaderBoard/ratings').set(ratings);
+
+            console.log(pq.printQueue());
         }
 
         function inputMove(move) {
