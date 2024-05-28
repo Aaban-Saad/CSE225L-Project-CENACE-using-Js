@@ -1535,6 +1535,9 @@
         ratingsRef.once('value', function (snapshot) {
             var ratings = snapshot.val();
 
+            // adding a dummy rating if no ratings are there.
+            ratings = ratings === "" ? "hacker.exe,999" : ratings;
+
             if (ratings) {
 
                 let splitted = ratings.split(';');
