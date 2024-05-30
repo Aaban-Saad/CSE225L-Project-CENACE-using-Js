@@ -966,44 +966,41 @@
 
 
         function profilePageOpen() {
-            if (localStorage.getItem('username') && localStorage.getItem('email')) {
-                document.getElementById('main-page').classList.add('hidden');
-                document.getElementById('profile-page').classList.remove('hidden');
+            if (!localStorage.getItem('username') && !localStorage.getItem('email')) return;
+            if (localStorage.getItem('prevGameDialog') === 'true') return;
 
-                document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
-                // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('profile-page').classList.remove('hidden');
 
-                // fetching ratings
-                userNames = [];
-                var ratingsRef = database.ref('leaderBoard/ratings');
-                ratingsRef.once('value', function (snapshot) {
-                    var ratings = snapshot.val();
+            document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
+            // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
 
-                    if (ratings) {
-                        // setting ratings to local storage
-                        localStorage.setItem('ratings', ratings);
+            // fetching ratings
+            userNames = [];
+            var ratingsRef = database.ref('leaderBoard/ratings');
+            ratingsRef.once('value', function (snapshot) {
+                var ratings = snapshot.val();
 
-                        let splitted = ratings.split(';');
-                        splitted.forEach(element => {
-                            let nameRating = element.split(',');
-                            nameRatings[nameRating[0]] = nameRating[1];
-                            userNames.push(nameRating[0]);
-                        });
+                if (ratings) {
+                    // setting ratings to local storage
+                    localStorage.setItem('ratings', ratings);
 
-                        let leaderBoardHtml = "<p><br><br>";
-                        for (let i = 0, j = 1; i < userNames.length; i++, j++) {
-                            leaderBoardHtml += (j) + ". " + userNames[i] + " (Rating: " + nameRatings[userNames[i]] + ")<br><br>";
-                        }
+                    let splitted = ratings.split(';');
+                    splitted.forEach(element => {
+                        let nameRating = element.split(',');
+                        nameRatings[nameRating[0]] = nameRating[1];
+                        userNames.push(nameRating[0]);
+                    });
 
-                        leaderBoardHtml += "</p>";
-                        document.getElementById('allPlayers').innerHTML = leaderBoardHtml;
+                    let leaderBoardHtml = "<p><br><br>";
+                    for (let i = 0, j = 1; i < userNames.length; i++, j++) {
+                        leaderBoardHtml += (j) + ". " + userNames[i] + " (Rating: " + nameRatings[userNames[i]] + ")<br><br>";
                     }
-                });
 
-
-
-
-            }
+                    leaderBoardHtml += "</p>";
+                    document.getElementById('allPlayers').innerHTML = leaderBoardHtml;
+                }
+            });
         }
 
         function mainPageOpen() {
@@ -1052,23 +1049,25 @@
                         moveGiven = true;
                         renderBoard();
                         if (checkWin() === 1) {
+                            gameIsRunning = false;
                             document.getElementById("top-message").innerHTML = "Player " + mark + " has won!";
                             scoreUpdate();
                             updateLearningData();
                             changeWiningCellColor();
                         } else if (checkWin() === -1) {
+                            gameIsRunning = false;
                             document.getElementById("top-message").innerHTML = "It's a draw!";
                             scoreUpdate();
                             updateLearningData();
                         } else {
                             // Switch player
+                            gameIsRunning = true;
                             player = 1;
                             mark = 'O';
                             document.getElementById("top-message").innerHTML = "CENACE'S turn";
                             setTimeout(computerMove, 100);
                         }
                     }
-                    gameIsRunning = true;
                     localStorage.setItem("gameIsRunning", gameIsRunning);
                     localStorage.setItem("board", board);
                     localStorage.setItem("player", player);
@@ -1133,24 +1132,26 @@
 
                 // Check for winner after computer's move
                 if (checkWin() === 1) {
+                    gameIsRunning = false;
                     document.getElementById("top-message").innerHTML = "Player " + mark + " has won!";
                     scoreUpdate();
                     updateLearningData();
                     changeWiningCellColor();
 
                 } else if (checkWin() === -1) {
+                    gameIsRunning = false;
                     document.getElementById("top-message").innerHTML = "It's a draw!";
                     scoreUpdate();
                     updateLearningData();
                     rating /= 2;
                 } else {
                     // Switch player
+                    gameIsRunning = true;
                     player = 2;
                     mark = 'X';
                     document.getElementById("top-message").innerHTML = "Your turn";
                 }
 
-                gameIsRunning = true;
                 localStorage.setItem("gameIsRunning", gameIsRunning);
                 localStorage.setItem("board", board);
                 localStorage.setItem("player", player);
@@ -1580,11 +1581,13 @@
                 return;
             }
 
+            localStorage.setItem('prevGameDialog', false);
+
             document.getElementById('continue-prev-game').classList.add('hidden');
             document.getElementById('main-page').classList.remove('hidden');
 
             // Continue previous game
-            gameIsRunning = (Boolean)(localStorage.getItem('gameIsRunning'));
+            gameIsRunning = (localStorage.getItem('gameIsRunning') === 'true');
             if (gameIsRunning) {
                 let stackElements = localStorage.getItem('stack').split(';');
                 // Rebuilding the stack of the previous game
@@ -1618,6 +1621,7 @@
         }
 
         function noButton() {
+            localStorage.setItem('prevGameDialog', false);
             document.getElementById('continue-prev-game').classList.add('hidden');
             document.getElementById('main-page').classList.remove('hidden');
         }
@@ -1675,13 +1679,15 @@
         }
 
 
-        // // Skip log in if already done
+        // Skip log in if already done
         if (localStorage.getItem('username') && localStorage.getItem('email')) {
             document.getElementById('login-page').classList.add('hidden');
-            if ((Boolean)(localStorage.getItem('gameIsRunning'))) {
+            if ((localStorage.getItem('gameIsRunning') === 'true')) {
                 document.getElementById('continue-prev-game').classList.remove('hidden');
+                localStorage.setItem('prevGameDialog', true);
             } else {
                 document.getElementById('main-page').classList.remove('hidden');
+                localStorage.setItem('prevGameDialog', false);
             }
         }
 
