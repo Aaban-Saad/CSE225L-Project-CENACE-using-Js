@@ -74,6 +74,21 @@
             padding: 10px;
         }
 
+        .dialog-container {
+            margin-top: 30px;
+            padding: 10px 0px 0px 0px;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            align-items: center;
+            justify-content: center;
+            width: 400px;
+            height: 200px;
+            background-color: rgba(54, 54, 54, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
 
 
         /* Styling for board container */
@@ -98,6 +113,17 @@
             color: white;
             position: relative;
             animation: glow 2s infinite alternate;
+        }
+
+        .yes-btn,
+        .no-btn {
+            height: 35px;
+            width: 75px;
+            border-radius: 10px;
+            border: 2px solid green;
+            background-color: #cdcdcd6c;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         @keyframes glow {
@@ -386,6 +412,14 @@
                 justify-content: center;
             }
 
+            .dialog-container {
+                width: 330px;
+                height: 150px;
+                padding: 5px 0px 0px 0px;
+                display: flex;
+                justify-content: center;
+            }
+
             .left-score,
             .right-score {
                 color: rgba(255, 255, 255, 0.726);
@@ -448,6 +482,7 @@
             .top-message {
                 margin: 0px 0px 0px 0px;
                 font-size: small;
+                font-weight: 700;
             }
 
             .sci-fi-btn {
@@ -486,6 +521,16 @@
         </div>
         <div class="title">
             <h1 class="cenace-title">Computer Educable Noughts And Crosses Engine</h1>
+        </div>
+    </div>
+
+    <div class="container hidden" id="continue-prev-game">
+        <div class="dialog-container">
+            <div style="font-size: larger;">Continue previous game?</div>
+            <div>
+                <button class="yes-btn" onclick="yesButton()">Yes</button>
+                <button class="no-btn" onclick="noButton()">No</button>
+            </div>
         </div>
     </div>
 
@@ -768,6 +813,10 @@
                 const queueElement = { element, priority };
                 let added = false;
                 for (let i = 0; i < this.items.length; i++) {
+                    if (queueElement.element === this.items[i].element) {
+                        break;
+                        added = true;
+                    }
                     if (Number(queueElement.priority) > Number(this.items[i].priority)) {
                         this.items.splice(i, 0, queueElement);
                         added = true;
@@ -816,7 +865,6 @@
                 // if (nameRatings[name] < rating) {
                 nameRatings[name] = rating;
                 // pq.enqueue(name, rating);
-                // }
             } else {
                 // Add the new name-rating pair
                 nameRatings[name] = rating;
@@ -980,7 +1028,6 @@
             let ratings = "";
             while (!pq.isEmpty()) {
                 let name = pq.dequeue();
-                // console.log("name in pq = " + name + pq.isEmpty());
                 let ratingOfThePlayer = nameRatings[name];
 
                 ratings += name + ',' + ratingOfThePlayer + ';';
@@ -991,8 +1038,6 @@
 
             // Updating ratings in database
             database.ref('leaderBoard/ratings').set(ratings);
-
-            console.log(pq.printQueue());
         }
 
         function inputMove(move) {
@@ -1003,7 +1048,6 @@
                 if (player === 2 && !autoTrain) {
                     if (board[move - 1] === ' ') {
                         rateThisMove(move);
-                        console.log('rating = ' + rating);
                         board[move - 1] = mark;
                         moveGiven = true;
                         renderBoard();
@@ -1025,6 +1069,10 @@
                         }
                     }
                     gameIsRunning = true;
+                    localStorage.setItem("gameIsRunning", gameIsRunning);
+                    localStorage.setItem("board", board);
+                    localStorage.setItem("player", player);
+                    localStorage.setItem("mark", mark);
                 }
             }
         }
@@ -1076,7 +1124,8 @@
                 // Pushing into stack
                 let stackElement = boardString + "," + move;
                 stack.push(stackElement);
-                // console.log(stackElement);
+                let localStorageStack = (localStorage.getItem("stack") === null ? "" : (localStorage.getItem("stack") + ";")) + stackElement;
+                localStorage.setItem("stack", localStorageStack);
 
                 renderBoard2(boardString, move);
                 board[move - 1] = mark;
@@ -1102,10 +1151,16 @@
                 }
 
                 gameIsRunning = true;
-                if (autoTrain) autoTrainMove();
+                localStorage.setItem("gameIsRunning", gameIsRunning);
+                localStorage.setItem("board", board);
+                localStorage.setItem("player", player);
+                localStorage.setItem("mark", mark);
+                // if (autoTrain) autoTrainMove();
             }
         }
 
+
+        // Currently no use
         function autoTrainMove() {
             if (checkWin() != 0) {
                 resetGame();
@@ -1143,30 +1198,29 @@
         function updateLearningData() {
             stack.forEach(element => {
                 let values = element.split(',');
-                // console.log("values 0 = " + values[0]);
-                // console.log("hash value = " + hashMap[values[0]]);
-                let hashValues = (hashMap[values[0]]).split(',');
-                let point = 0;
-                // console.log(hashValues.toString());
-                if (checkWin() === 1 && mark === 'O') {
-                    point = Number(hashValues[values[1] - 1]);
-                    point += WIN_REWORD;
-                } else if (checkWin() === -1 && mark === 'X') {
-                    point = Number(hashValues[values[1] - 1]);
-                    point += DRAW_REWORD;
-                } else {
-                    point = Number(hashValues[values[1] - 1]);
-                    point -= PUNISHMENT;
+
+                if (!hashMap[values[0]] !== undefined) {
+                    let hashValues = (hashMap[values[0]]).split(',');
+                    let point = 0;
+                    if (checkWin() === 1 && mark === 'O') {
+                        point = Number(hashValues[values[1] - 1]);
+                        point += WIN_REWORD;
+                    } else if (checkWin() === -1 && mark === 'X') {
+                        point = Number(hashValues[values[1] - 1]);
+                        point += DRAW_REWORD;
+                    } else {
+                        point = Number(hashValues[values[1] - 1]);
+                        point -= PUNISHMENT;
+                    }
+                    if (point > MAX_POINT) {
+                        point = MAX_POINT;
+                    }
+                    if (point < MIN_POINT) {
+                        point = MIN_POINT;
+                    }
+                    hashValues[values[1] - 1] = point;
+                    hashMap[values[0]] = hashValues.toString();
                 }
-                if (point > MAX_POINT) {
-                    point = MAX_POINT;
-                }
-                if (point < MIN_POINT) {
-                    point = MIN_POINT;
-                }
-                hashValues[values[1] - 1] = point;
-                hashMap[values[0]] = hashValues.toString();
-                // console.log(toString(hashValues));
             });
             // let inOrderArray = inOrderTraversal(bst.root);
             let inOrderArray = bst.inOrderTraversal();
@@ -1383,6 +1437,8 @@
             match++;
             document.getElementById("match").innerHTML = "Match " + match;
             gameIsRunning = false;
+            localStorage.setItem("gameIsRunning", gameIsRunning);
+            localStorage.removeItem("stack");
             bst.clear();
             while (stack.length > 0) {
                 stack.pop();
@@ -1404,10 +1460,11 @@
         }
 
         function start() {
-            if (!fetchedTrainingData) return;
+            if (!fetchedTrainingData) return; // If not fetched during loading then return
             if (!fetchedRatings) return;
             if (!autoTrain) {
                 if (!gameIsRunning || checkWin() != 0) {
+
 
                     (document.getElementById("cell1")).classList.remove("wining-cell");
                     (document.getElementById("cell2")).classList.remove("wining-cell");
@@ -1433,6 +1490,7 @@
                         resetGame();
                     }
 
+                    // Fetching training data
                     var trainingDataRef = database.ref('cenace/training_data');
                     trainingDataRef.once('value', function (snapshot) {
                         var trainingData = snapshot.val();
@@ -1448,15 +1506,10 @@
                         lines.forEach(element => {
                             let key = element.substr(0, 9);
                             let value = element.substr(10, element.length - 10);
-
                             bst.insert(key);
                             hashMap[key] = value;
-
-                            // console.log("key = " + key);
-                            // console.log("value = " + value);
                         });
                     }
-
 
                     // fetching ratings
                     userNames = [];
@@ -1482,12 +1535,18 @@
                     player = initialPlayer === 2 ? 1 : 2;
                     initialPlayer = player;
                     mark = player === 1 ? 'O' : 'X';
+
+                    localStorage.setItem('initialPlayer', initialPlayer);
+
+
                     if (player === 1) {
                         document.getElementById("top-message").innerHTML = "CENACE's turn";
                         computerMove();
                     } else {
                         document.getElementById("top-message").innerHTML = "Your turn";
                     }
+
+
                     // css glow animation
                     let button = document.getElementById('sci-fi-btn')
                     button.classList.add('sci-fi-btn-glow');
@@ -1500,6 +1559,10 @@
                 gameIsRunning = true;
                 computerMove();
             }
+
+            localStorage.setItem("match", match);
+            localStorage.setItem("O_score", O_score);
+            localStorage.setItem("X_score", X_score);
         }
 
         function processTrainingCheckbox() {
@@ -1511,49 +1574,121 @@
             }
         }
 
+        function yesButton() {
+            if (!fetchedTrainingData && !fetchedRatings) {
+                alert("Slow internet connection!");
+                return;
+            }
+
+            document.getElementById('continue-prev-game').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+
+            // Continue previous game
+            gameIsRunning = (Boolean)(localStorage.getItem('gameIsRunning'));
+            if (gameIsRunning) {
+                let stackElements = localStorage.getItem('stack').split(';');
+                // Rebuilding the stack of the previous game
+                stackElements.forEach(element => {
+                    stack.push(element);
+                });
+
+                // Rebuilding variables
+                board = localStorage.getItem('board').split(',');
+                player = (Number)(localStorage.getItem('player'));
+                initialPlayer = (Number)(localStorage.getItem('initialPlayer'));
+                mark = localStorage.getItem('mark');
+                match = (Number)(localStorage.getItem('match'));
+
+                // Rebuilding the scores and match number
+                document.getElementById('o-score').innerHTML = localStorage.getItem('O_score');
+                document.getElementById('x-score').innerHTML = localStorage.getItem('X_score');
+                document.getElementById('match').innerHTML = "Match " + localStorage.getItem('match');
+                if (player === 1) {
+                    document.getElementById("top-message").innerHTML = "CENACE's turn";
+                    computerMove();
+                } else {
+                    document.getElementById("top-message").innerHTML = "Your turn";
+                }
+
+                document.getElementById('main-page').classList.remove('hidden');
+
+                renderBoard();
+                start();
+            }
+        }
+
+        function noButton() {
+            document.getElementById('continue-prev-game').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+        }
+
+        function fetchTrainingData() {
+            // fetching training data
+            localStorage.removeItem('learning_data');
+            var trainingDataRef = database.ref('cenace/training_data');
+            trainingDataRef.once('value', function (snapshot) {
+                var trainingData = snapshot.val();
+
+                // setting training data to local storage
+                localStorage.setItem('learning_data', trainingData);
+                let learningData = localStorage.getItem("learning_data");
+                if (learningData) {
+                    let lines = learningData.split(";");
+                    lines.forEach(element => {
+                        let key = element.substr(0, 9);
+                        let value = element.substr(10, element.length - 10);
+
+                        bst.insert(key);
+                        hashMap[key] = value;
+                    });
+                }
+                fetchedTrainingData = true;
+            });
+        }
+
+        function fetchRatings() {
+            // fetching ratings
+            userNames = [];
+            localStorage.removeItem('ratings');
+            var ratingsRef = database.ref('leaderBoard/ratings');
+            ratingsRef.once('value', function (snapshot) {
+                var ratings = snapshot.val();
+
+                // adding a dummy rating if no ratings are there.
+                ratings = ratings === "" ? "hacker.exe,999" : ratings;
+
+                if (ratings) {
+
+                    let splitted = ratings.split(';');
+                    splitted.forEach(element => {
+                        let nameRating = element.split(',');
+                        nameRatings[nameRating[0]] = nameRating[1];
+                        userNames.push(nameRating[0]);
+                        // pq.enqueue(nameRating[0], nameRating[1])
+                    });
+
+                    // setting ratings to local storage
+                    localStorage.setItem('ratings', ratings);
+                    fetchedRatings = true;
+                }
+            });
+        }
+
 
         // // Skip log in if already done
         if (localStorage.getItem('username') && localStorage.getItem('email')) {
             document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('main-page').classList.remove('hidden');
+            if ((Boolean)(localStorage.getItem('gameIsRunning'))) {
+                document.getElementById('continue-prev-game').classList.remove('hidden');
+            } else {
+                document.getElementById('main-page').classList.remove('hidden');
+            }
         }
 
-        // fetching training data
-        localStorage.removeItem('learning_data');
-        var trainingDataRef = database.ref('cenace/training_data');
-        trainingDataRef.once('value', function (snapshot) {
-            var trainingData = snapshot.val();
 
-            // setting training data to local storage
-            localStorage.setItem('learning_data', trainingData);
-            fetchedTrainingData = true;
-        });
 
-        // fetching ratings
-        localStorage.removeItem('ratings');
-        var ratingsRef = database.ref('leaderBoard/ratings');
-        ratingsRef.once('value', function (snapshot) {
-            var ratings = snapshot.val();
-
-            // adding a dummy rating if no ratings are there.
-            ratings = ratings === "" ? "hacker.exe,999" : ratings;
-
-            if (ratings) {
-
-                let splitted = ratings.split(';');
-                splitted.forEach(element => {
-                    let nameRating = element.split(',');
-                    nameRatings[nameRating[0]] = nameRating[1];
-                    userNames.push(nameRating[0]);
-                    // pq.enqueue(nameRating[0], nameRating[1])
-                });
-
-                // setting ratings to local storage
-                localStorage.setItem('ratings', ratings);
-                fetchedRatings = true;
-            }
-        });
-
+        fetchTrainingData();
+        fetchRatings();
         renderBoard();
 
     </script>
