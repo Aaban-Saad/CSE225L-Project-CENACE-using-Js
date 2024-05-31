@@ -45,10 +45,14 @@
 
         .title-container {
             background-color: rgba(90, 90, 90, 0.39);
+
             padding: 10px;
             /* margin-bottom: 30px; */
             display: flex;
             align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
         }
 
         .title {
@@ -66,7 +70,7 @@
 
         /* Default styling for larger screens (row layout) */
         .game-container {
-            margin-top: 30px;
+            margin-top: 100px;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -75,7 +79,7 @@
         }
 
         .dialog-container {
-            margin-top: 30px;
+            margin-top: 100px;
             padding: 10px 0px 0px 0px;
             display: flex;
             flex-direction: column;
@@ -139,7 +143,6 @@
 
             }
         }
-
 
         .board {
             display: grid;
@@ -361,13 +364,27 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 5px;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background-color: #34343497;
+        }
+
+        .leader-board-container {
+            /* margin-top: 100px; */
+            padding-top: 120px;
+            min-height: 100vh;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.493);
+/* background: linear-gradient(195deg, rgba(233, 100, 67, 0.575) 0%, rgba(144, 78, 149, 0.49) 100%); */
         }
 
         .leader-board {
             display: flex;
             justify-content: center;
             align-items: center;
+            font-weight: 500;
         }
 
         .profile-nav-right {
@@ -510,7 +527,7 @@
 </head>
 
 <body>
-    <div class="title-container">
+    <div class="title-container" id="title-container">
         <div class="profile-pic-container" style="cursor: pointer;" onclick="profilePageOpen()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 style="fill: rgb(255, 255, 255)">
@@ -566,7 +583,7 @@
     </div>
 
     <div id="profile-page" class="hidden profile-page">
-        <div style="min-height: 100vh; width:90vw; background-color: rgba(0, 0, 0, 0.488);">
+        <div class="leader-board-container">
             <div class="profile-nav">
                 <div class="profile-nav-left"> <button
                         style="padding: 5px; color: rgb(255, 255, 255); background-color: #1bbb53c2; cursor: pointer;"
@@ -971,6 +988,7 @@
 
             document.getElementById('main-page').classList.add('hidden');
             document.getElementById('profile-page').classList.remove('hidden');
+            document.getElementById('title-container').classList.add('hidden');
 
             document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
             // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
@@ -1006,6 +1024,7 @@
         function mainPageOpen() {
             document.getElementById('profile-page').classList.add('hidden');
             document.getElementById('main-page').classList.remove('hidden');
+            document.getElementById('title-container').classList.remove('hidden');
         }
 
         function logOut() {
@@ -1461,8 +1480,10 @@
         }
 
         function start() {
-            if (!fetchedTrainingData) return; // If not fetched during loading then return
-            if (!fetchedRatings) return;
+            if (!fetchedTrainingData && !fetchedRatings) {
+                alert("Slow internet connection!");
+                return; // If not fetched during loading then return
+            }
             if (!autoTrain) {
                 if (!gameIsRunning || checkWin() != 0) {
 
