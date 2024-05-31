@@ -46,7 +46,7 @@
         .title-container {
             background-color: rgba(90, 90, 90, 0.39);
 
-            padding: 10px;
+            padding: 5px;
             /* margin-bottom: 30px; */
             display: flex;
             align-items: center;
@@ -128,6 +128,50 @@
             background-color: #cdcdcd6c;
             font-weight: bold;
             cursor: pointer;
+        }
+
+        .logout-btn {
+            height: 35px;
+            width: 75px;
+            border-radius: 10px;
+            background-color: #ff5d5dec;
+            font-weight: bold;
+            cursor: point
+        }
+
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 35px;
+            width: 100px;
+            border-radius: 10px;
+            border: 2px solid green;
+            background-color: #cdcdcd6c;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .google-sign-in-btn {
+            display: flex;
+            padding: 10px;
+            justify-content: space-evenly;
+            align-items: center;
+            height: 75px;
+            width: 300px;
+            border-radius: 10px;
+            background-color: #ffffffec;
+            border: none;
+            color: black;
+            font-size: large;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all .5s ease;
+        }
+
+        .google-sign-in-btn:hover {
+            background-color: #ffffffd3;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.549);
         }
 
         @keyframes glow {
@@ -377,7 +421,7 @@
             min-height: 100vh;
             width: 100%;
             background: rgba(0, 0, 0, 0.493);
-/* background: linear-gradient(195deg, rgba(233, 100, 67, 0.575) 0%, rgba(144, 78, 149, 0.49) 100%); */
+            /* background: linear-gradient(195deg, rgba(233, 100, 67, 0.575) 0%, rgba(144, 78, 149, 0.49) 100%); */
         }
 
         .leader-board {
@@ -395,7 +439,7 @@
         }
 
         .login-container {
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         /* Styling for small screens (column layout) */
@@ -527,20 +571,20 @@
 </head>
 
 <body>
-    <div class="title-container" id="title-container">
-        <div class="profile-pic-container" style="cursor: pointer;" onclick="profilePageOpen()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+    <div class="title-container hidden" id="title-container">
+        <div id="profile-pic-container" class="profile-pic-container" style="cursor: pointer;"
+            onclick="profilePageOpen()">
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 style="fill: rgb(255, 255, 255)">
                 <path
                     d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z">
                 </path>
-            </svg>
+            </svg> -->
         </div>
         <div class="title">
             <h1 class="cenace-title">Computer Educable Noughts And Crosses Engine</h1>
         </div>
     </div>
-
     <div class="container hidden" id="continue-prev-game">
         <div class="dialog-container">
             <div style="font-size: larger;">Continue previous game?</div>
@@ -551,47 +595,67 @@
         </div>
     </div>
 
-    <div id="login-page" class="container login-container">
-        <div id="signup-container">
+    <div id="login-page" class="login-container">
+        <div style="display: flex; flex-direction: column; align-items: center;" id="signup-container">
+            <!-- <h1>Welcome to</h1> -->
+            <h1 style="text-align: center; font-size: 100px;">CENACE</h1>
 
-            <div class="board-container">
-                <form id="signUpForm" onsubmit="processSignUpForm(event)">
-                    <label for="username">Username:</label><br>
-                    <input type="text" id="s_username" class="username" name="s_username" required><br><br>
-                    <label for="email">Email:</label><br>
-                    <input type="email" id="s_email" class="email" name="s_email" required><br><br>
-                    <button class="sci-fi-btn" type="submit">Sign Up</button>
-                </form>
-                <br>
-                <p>Already Signed Up? <span style="text-decoration: underline; cursor: pointer;"
-                        onclick="logIn()">LogIn</span></p>
-            </div>
-        </div>
+            <div style="width: 90%; padding: 20px; background-color: #21212190; border-radius: 30px; text-align: center; margin-bottom: 30px; font-weight: 600; font-size: large;">CENACE, the Computer Educable Naughts and Crosses Engine, is a computer simulation of the groundbreaking MENACE reinforcement learning model designed by Donald Michie in 1961. This model showed how inanimate objects, for example, match boxes, can build up a system that can learn from rewords and punishments. <br><br>
 
-        <div id="login-container" class="hidden">
-            <div class="board-container">
-                <form id="signUpForm" onsubmit="processLogInForm(event)">
-                    <label for="email">Email:</label><br>
-                    <input type="email" id="l_email" class="email" name="l_email" required><br><br>
-                    <button class="sci-fi-btn" type="submit">Log In</button>
-                </form>
-                <br>
-                <p>Didn't Sign Up? <span style="text-decoration: underline; cursor: pointer;"
-                        onclick="signUp()">SignUp</span></p>
-            </div>
+                CENACE simulates the neural network architecture of MENACE to master the game of naughts and crosses (Tic Tac Toe) through reinforcement learning. It has the ability to adapt and evolve strategies based on experience, showcasing the enduring relevance of Michie's insights and the potency of modern computational advancements.</div>
+
+            <button id="googleSignInBtn" class="google-sign-in-btn" onclick="googleSignInBtn()">
+                <svg width="28px" height="28px" viewBox="-0.5 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <title>Google-color</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs> </defs>
+                        <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Color-" transform="translate(-401.000000, -860.000000)">
+                                <g id="Google" transform="translate(401.000000, 860.000000)">
+                                    <path
+                                        d="M9.82727273,24 C9.82727273,22.4757333 10.0804318,21.0144 10.5322727,19.6437333 L2.62345455,13.6042667 C1.08206818,16.7338667 0.213636364,20.2602667 0.213636364,24 C0.213636364,27.7365333 1.081,31.2608 2.62025,34.3882667 L10.5247955,28.3370667 C10.0772273,26.9728 9.82727273,25.5168 9.82727273,24"
+                                        id="Fill-1" fill="#FBBC05"> </path>
+                                    <path
+                                        d="M23.7136364,10.1333333 C27.025,10.1333333 30.0159091,11.3066667 32.3659091,13.2266667 L39.2022727,6.4 C35.0363636,2.77333333 29.6954545,0.533333333 23.7136364,0.533333333 C14.4268636,0.533333333 6.44540909,5.84426667 2.62345455,13.6042667 L10.5322727,19.6437333 C12.3545909,14.112 17.5491591,10.1333333 23.7136364,10.1333333"
+                                        id="Fill-2" fill="#EB4335"> </path>
+                                    <path
+                                        d="M23.7136364,37.8666667 C17.5491591,37.8666667 12.3545909,33.888 10.5322727,28.3562667 L2.62345455,34.3946667 C6.44540909,42.1557333 14.4268636,47.4666667 23.7136364,47.4666667 C29.4455,47.4666667 34.9177955,45.4314667 39.0249545,41.6181333 L31.5177727,35.8144 C29.3995682,37.1488 26.7323182,37.8666667 23.7136364,37.8666667"
+                                        id="Fill-3" fill="#34A853"> </path>
+                                    <path
+                                        d="M46.1454545,24 C46.1454545,22.6133333 45.9318182,21.12 45.6113636,19.7333333 L23.7136364,19.7333333 L23.7136364,28.8 L36.3181818,28.8 C35.6879545,31.8912 33.9724545,34.2677333 31.5177727,35.8144 L39.0249545,41.6181333 C43.3393409,37.6138667 46.1454545,31.6490667 46.1454545,24"
+                                        id="Fill-4" fill="#4285F4"> </path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                Continue with Google
+            </button>
         </div>
     </div>
 
     <div id="profile-page" class="hidden profile-page">
         <div class="leader-board-container">
             <div class="profile-nav">
-                <div class="profile-nav-left"> <button
-                        style="padding: 5px; color: rgb(255, 255, 255); background-color: #1bbb53c2; cursor: pointer;"
-                        onclick="mainPageOpen()">Go Back</button></div>
-                <div class="profile-nav-right"><span id="profile-email"></span> <button style="color: red;"
-                        onclick="logOut()">Log Out</button></div>
+                <div class="profile-nav-left">
+                    <button class="button" onclick="mainPageOpen()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgb(255, 255, 255);">
+                            <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
+                        </svg>
+                        Go Back
+                    </button>
+                </div>
+                <div class="profile-nav-right">
+                    <button class="logout-btn" onclick="logOut()">Log Out</button>
+                </div>
             </div>
             <div style="display: flex; flex-direction: column;" class="leader-board">
+                <span id="profile-email"></span>
                 <h1>Leader Board</h1>
                 <div id="allPlayers" class="allPlayers"></div>
             </div>
@@ -672,6 +736,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
 
     <script>
         // For setting up firebase
@@ -910,78 +975,6 @@
         let userNames = [];
         let pq = new PriorityQueue();
 
-        function logIn() {
-            document.getElementById('signup-container').classList.add('hidden');
-            document.getElementById('login-container').classList.remove('hidden');
-
-        }
-
-        function signUp() {
-            document.getElementById('login-container').classList.add('hidden');
-            document.getElementById('signup-container').classList.remove('hidden');
-        }
-
-        function processSignUpForm(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-
-            // Get form values
-            var username = document.getElementById("s_username").value;
-            var email = document.getElementById("s_email").value;
-
-            // Firebase cannot save path with '.'s thats why splitting it and taking the 1st part
-            let id = email.split('.');
-            // Save to database
-
-            // Checking if user already exists
-            var emailRef = database.ref('users/' + id[0]);
-            emailRef.once('value', function (snapshot) {
-                var emailInDatabase = snapshot.val();
-                if (emailInDatabase) {
-                    alert("User already exists");
-                } else {
-                    database.ref('users/' + id[0]).set({ 'username': username, 'email': email });
-
-                    localStorage.setItem('username', username);
-                    localStorage.setItem('email', email);
-
-                    // Switch to main page
-                    document.getElementById('login-page').classList.add('hidden');
-                    document.getElementById('main-page').classList.remove('hidden');
-                }
-            });
-
-        }
-
-        function processLogInForm(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-
-            // Get form values
-            var email = document.getElementById("l_email").value;
-
-            let id = email.split('.');
-            // Save to database
-
-            // Checking if user already exists
-            var emailRef = database.ref('users/' + id[0]);
-            emailRef.once('value', function (snapshot) {
-                var emailInDatabase = snapshot.val();
-                if (emailInDatabase) {
-                    if (emailInDatabase.email === email) {
-                        localStorage.setItem('username', emailInDatabase.username);
-                        localStorage.setItem('email', emailInDatabase.email);
-
-                        // Switch to main page
-                        document.getElementById('login-page').classList.add('hidden');
-                        document.getElementById('main-page').classList.remove('hidden');
-                    }
-                } else {
-                    alert("User does not exist");
-                }
-            });
-            localStorage.setItem('email', email);
-        }
-
-
         function profilePageOpen() {
             if (!localStorage.getItem('username') && !localStorage.getItem('email')) return;
             if (localStorage.getItem('prevGameDialog') === 'true') return;
@@ -990,7 +983,11 @@
             document.getElementById('profile-page').classList.remove('hidden');
             document.getElementById('title-container').classList.add('hidden');
 
-            document.getElementById('profile-email').innerHTML = localStorage.getItem('username') + "<br>" + localStorage.getItem('email');
+            let photo = `<img src = "${localStorage.getItem('photoURL')}" height = "100" width = "100">`
+            let name = localStorage.getItem('username');
+            let email = localStorage.getItem('email');
+
+            document.getElementById('profile-email').innerHTML = `<div style = "margin-bottom: 50px; display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">${photo} <p style="font-size: x-large">${name}</p> <p>${email}</p></div>`;
             // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
 
             // fetching ratings
@@ -1010,12 +1007,19 @@
                         userNames.push(nameRating[0]);
                     });
 
-                    let leaderBoardHtml = "<p><br><br>";
+                    let leaderBoardHtml = `<div style="width: 90vw; display: flex; flex-direction: column"><br><br>`;
+                    let evenRow = `<div style="background-color: #ffffff; width: 100%; border-radius: 10px; margin: 5px; padding: 10px; color: black">`;
+                    let oddRow = `<div style="background-color: #ffe8e8; width: 100%; border-radius: 10px; margin: 5px; padding: 10px; color: black">`;
                     for (let i = 0, j = 1; i < userNames.length; i++, j++) {
-                        leaderBoardHtml += (j) + ". " + userNames[i] + " (Rating: " + nameRatings[userNames[i]] + ")<br><br>";
+                        let line = (j) + ". " + userNames[i] + " (Rating: " + nameRatings[userNames[i]] + ")<br>";
+                        if (i % 2 == 0) {
+                            leaderBoardHtml += evenRow + line + "</div>"
+                        } else {
+                            leaderBoardHtml += oddRow + line + "</div>"
+                        }
                     }
 
-                    leaderBoardHtml += "</p>";
+                    leaderBoardHtml += "</div>";
                     document.getElementById('allPlayers').innerHTML = leaderBoardHtml;
                 }
             });
@@ -1030,9 +1034,12 @@
         function logOut() {
             localStorage.removeItem('username');
             localStorage.removeItem('email');
+            localStorage.removeItem('uid');
+            localStorage.removeItem('photoURL');
             document.getElementById('main-page').classList.add('hidden');
             document.getElementById('profile-page').classList.add('hidden');
             document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('title-container').classList.add('hidden');
         }
 
         function updateRatings() {
@@ -1699,10 +1706,57 @@
             });
         }
 
+        function googleSignInBtn() {
+            const googleSignInBtn = document.getElementById('googleSignInBtn');
+
+            googleSignInBtn.addEventListener('click', () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                firebase.auth().signInWithPopup(provider)
+                    .then((result) => {
+                        // This gives you a Google Access Token.
+                        const token = result.credential.accessToken;
+                        // This gives you the signed-in user info.
+                        const user = result.user;
+                        console.log(user);
+
+                        localStorage.setItem('username', user.displayName);
+                        localStorage.setItem('email', user.email);
+                        localStorage.setItem('photoURL', user.photoURL);
+                        localStorage.setItem('uid', user.uid);
+
+                        // Save to database
+                        database.ref('users/' + user.uid).set({ 'username': user.displayName, 'email': user.email, 'photo': user.photoURL });
+
+                        // Switch to main page
+                        document.getElementById('login-page').classList.add('hidden');
+                        document.getElementById('main-page').classList.remove('hidden');
+                        document.getElementById('title-container').classList.remove('hidden');
+
+                        document.getElementById('profile-pic-container').innerHTML = `<img src="${localStorage.getItem('photoURL')}" width="48" height="48">`
+
+                    })
+                    .catch((error) => {
+                        // Handle Errors here.
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        // The email of the user's account used.
+                        const email = error.email;
+                        // The Firebase Auth ID token need to be used to fetch a user's basic profile
+                        const credential = error.credential;
+                        console.log(error);
+                        // ...
+                    });
+            });
+
+        }
+
 
         // Skip log in if already done
-        if (localStorage.getItem('username') && localStorage.getItem('email')) {
+        if (localStorage.getItem('username') && localStorage.getItem('email') && localStorage.getItem('uid') && localStorage.getItem('photoURL')) {
             document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('title-container').classList.remove('hidden');
+            document.getElementById('profile-pic-container').innerHTML = `<img src="${localStorage.getItem('photoURL')}" width="48" height="48">`
+
             if ((localStorage.getItem('gameIsRunning') === 'true')) {
                 document.getElementById('continue-prev-game').classList.remove('hidden');
                 localStorage.setItem('prevGameDialog', true);
