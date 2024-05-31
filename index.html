@@ -153,25 +153,19 @@
         }
 
         .google-sign-in-btn {
+            margin-bottom: 30px;
             display: flex;
             padding: 10px;
             justify-content: space-evenly;
             align-items: center;
-            height: 75px;
-            width: 300px;
+            height: 65px;
+            width: 260px;
             border-radius: 10px;
             background-color: #ffffffec;
             border: none;
             color: black;
-            font-size: large;
-            font-weight: bold;
+            font-size: medium;
             cursor: pointer;
-            transition: all .5s ease;
-        }
-
-        .google-sign-in-btn:hover {
-            background-color: #ffffffd3;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.549);
         }
 
         @keyframes glow {
@@ -598,14 +592,14 @@
     <div id="login-page" class="login-container">
         <div style="display: flex; flex-direction: column; align-items: center;" id="signup-container">
             <!-- <h1>Welcome to</h1> -->
-            <h1 style="text-align: center; font-size: 100px;">CENACE</h1>
+            <h1 style="text-align: center; font-size: 70px;">CENACE</h1>
 
             <div style="width: 90%; padding: 20px; background-color: #21212190; border-radius: 30px; text-align: center; margin-bottom: 30px; font-weight: 600; font-size: large;">CENACE, the Computer Educable Naughts and Crosses Engine, is a computer simulation of the groundbreaking MENACE reinforcement learning model designed by Donald Michie in 1961. This model showed how inanimate objects, for example, match boxes, can build up a system that can learn from rewords and punishments. <br><br>
 
                 CENACE simulates the neural network architecture of MENACE to master the game of naughts and crosses (Tic Tac Toe) through reinforcement learning. It has the ability to adapt and evolve strategies based on experience, showcasing the enduring relevance of Michie's insights and the potency of modern computational advancements.</div>
 
             <button id="googleSignInBtn" class="google-sign-in-btn" onclick="googleSignInBtn()">
-                <svg width="28px" height="28px" viewBox="-0.5 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                <svg width="24px" height="24px" viewBox="-0.5 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -987,7 +981,7 @@
             let name = localStorage.getItem('username');
             let email = localStorage.getItem('email');
 
-            document.getElementById('profile-email').innerHTML = `<div style = "margin-bottom: 50px; display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">${photo} <p style="font-size: x-large">${name}</p> <p>${email}</p></div>`;
+            document.getElementById('profile-email').innerHTML = `<div style = "margin-bottom: 50px; display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">${photo} <p style="font-size: x-large; text-align: center;">${name}</p> <p style="text-align: center;">${email}</p></div>`;
             // profilePage.innerHTML = "Logged in as " + localStorage.getItem('email');
 
             // fetching ratings
@@ -1733,6 +1727,9 @@
                         document.getElementById('title-container').classList.remove('hidden');
 
                         document.getElementById('profile-pic-container').innerHTML = `<img src="${localStorage.getItem('photoURL')}" width="48" height="48">`
+
+                        document.body.scrollTop = 0; // For Safari
+                        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
                     })
                     .catch((error) => {
